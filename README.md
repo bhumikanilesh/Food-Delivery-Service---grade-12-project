@@ -65,7 +65,7 @@ pip install mysql-connector-python tabulate
    ```
 5. Run the script:
    ```bash
-   python food_delivery_service.py
+   python LEARNING.py
    ```
 
 ---
