@@ -1,0 +1,95 @@
+import mysql.connector as ms
+from tabulate import tabulate
+mycon=ms.connect(host="localhost",user="root",passwd="1234",database="school")
+if mycon.is_connected():
+    print("Successfully Connected")
+mycursor=mycon.cursor()
+
+
+def create():
+      
+    try:
+        q="create table student (sno int,name char(15),marks float)"
+        mycursor.execute(q)
+        print("Successfully created")
+        
+    except Exception as e:
+        print (e)
+        mycursor.execute("drop table student")
+
+
+def insert():
+    no=int(input("Enter the student number"))
+    na=input("Enter name:")
+    m=float(input("Enter marks:"))
+
+
+    qu="insert into student values({},'{}',{})".format(no,na,m)
+
+    mycursor.execute(qu)
+    mycon.commit()
+
+def displayall():
+    mycursor.execute("select * from cuisines")
+    data=mycursor.fetchall()
+    count=mycursor.rowcount
+    print("Total number of records",count)
+    print(tabulate(data,headers=["Sno","Name","Marks"],tablefmt='grid'))
+   
+
+def display_specific():
+    print("1. Based on student no")
+    print("2. Based on name:")
+    print("3.Based on marks:")
+    choice=int(input("Enter your choice:"))
+    if choice==1:
+        n=int(input("Enter student number:"))
+        q="select * from student where sno={}".format(n)
+        mycursor.execute(q)
+        data=mycursor.fetchone()
+        print(data)
+    elif choice==2:
+         na=input("Enter student name:")
+         q="select * from student where name='{}'".format(na)
+         mycursor.execute(q)
+         data=mycursor.fetchall()
+         for i in data:
+             print(i)
+    elif choice==3:
+         m=int(input("Enter marks:"))
+         q="select * from student where marks>{}".format(m)
+         mycursor.execute(q)
+         data=mycursor.fetchall()
+         for i in data:
+             print(i)
+
+
+
+def menu():
+    ans='y'
+    while (ans=='y'):
+        print()
+        print()
+        print ("1. Create Table")
+        print("2. Add data:")
+        print("3.Display Student Table")
+        print("4. Display specific record:")
+        print("5. Exiting")
+        choice=int(input("Enter your choice: "))
+        if choice == 1:
+            create()
+        elif choice == 2:
+            insert()
+        elif choice==3:
+            displayall()
+        elif choice==4:
+            display_specific()
+            
+        elif choice == 5:
+            print("Exiting")
+            break
+    else:
+        print("wrong input")
+    ans=input("Do you want to continue or not: ")
+    
+menu()     
